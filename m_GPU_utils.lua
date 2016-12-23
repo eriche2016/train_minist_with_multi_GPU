@@ -16,13 +16,13 @@ function makeDataParallel(model, nGPU)
    return model   -- model actually contains two part, each sites on a different GPU 
 end
 
-local function cleanDPT(module)
+local function cleanDPT(model)
    -- This assumes this DPT was created by the function above: all the
    -- module.modules are clones of the same network on different GPUs
    -- hence we only need to keep one when saving the model to the disk.
    local newDPT = nn.DataParallelTable(1)
    cutorch.setDevice(opt.gpuid + 1)
-   newDPT:add(module:get(1), opt.gpuid + 1 )
+   newDPT:add(model:get(1), opt.gpuid + 1 )
    return newDPT
 end
 
